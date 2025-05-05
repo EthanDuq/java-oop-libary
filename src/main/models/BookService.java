@@ -37,6 +37,28 @@ public class BookService implements LibraryService<Book>, Loanable, Reservable{
     }
 
     @Override
+    public List<Book> getItemByName(String name) {
+        List<Book> booksByName = new ArrayList<>();
+        books.stream().filter(book -> book.getTitle().equals(name))
+                      .forEach((book) -> {
+                          booksByName.add(book);
+                          System.out.println(book);
+                      });
+        return booksByName;
+    }
+
+    @Override
+    public List<Book> getItemByAuthor(String author) {
+        List<Book> booksByAuthor = new ArrayList<>();
+        books.stream().filter(book -> book.getAuthor().equals(author))
+                      .forEach((book) -> {
+                         booksByAuthor.add(book);
+                         System.out.println(book);
+                      });
+        return booksByAuthor;
+    }
+
+    @Override
     public List<Book> getItems() {
         return new ArrayList<>(books);
     }
