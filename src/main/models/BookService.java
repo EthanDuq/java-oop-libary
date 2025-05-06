@@ -36,7 +36,6 @@ public class BookService implements LibraryService<Book>, Loanable, Reservable{
         return bookToGet;
     }
 
-    @Override
     public List<Book> getItemByName(String name) {
         List<Book> booksByName = new ArrayList<>();
         books.stream().filter(book -> book.getTitle().equals(name))
@@ -47,7 +46,6 @@ public class BookService implements LibraryService<Book>, Loanable, Reservable{
         return booksByName;
     }
 
-    @Override
     public List<Book> getItemByAuthor(String author) {
         List<Book> booksByAuthor = new ArrayList<>();
         books.stream().filter(book -> book.getAuthor().equals(author))
