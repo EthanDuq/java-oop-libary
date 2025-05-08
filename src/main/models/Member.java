@@ -1,5 +1,7 @@
 package models;
 
+import enums.MemberStatus;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -8,6 +10,8 @@ public class Member {
     public static int idSuivante = 0;
     private int id;
     private String name;
+
+    private MemberStatus status;
 
     private final int MAX_BOOKS_TO_BORROWED = 5;
     private final int MAX_BOOKS_TO_RESERVED = 5;
@@ -19,6 +23,19 @@ public class Member {
         this.name = name;
         this.id = idSuivante;
         idSuivante++;
+        this.status = MemberStatus.ACTIVE;
+    }
+
+    public boolean isId(int id) {
+        return this.id == id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Member member = (Member) obj;
+        return id == member.id;
     }
 
     private boolean canBorrow(Book book) {
@@ -56,7 +73,7 @@ public class Member {
     }
 
     public boolean reserveBook(Book book) {
-        if (!isReserved(book)) {
+        if (canReserve(book)) {
             reservedBooks.add(book);
             return true;
         }

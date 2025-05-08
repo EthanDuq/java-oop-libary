@@ -26,14 +26,10 @@ public class BookService implements LibraryService<Book>, Loanable, Reservable{
 
     @Override
     public Book getItem(int id) {
-        Optional<Book> book = books.stream()
-                                   .filter(b -> b.isId(id))
-                                   .findFirst();
-        Book bookToGet = book.get();
-        if (bookToGet == null) {
-            throw new IllegalArgumentException("Book does not exist");
-        }
-        return bookToGet;
+        return books.stream()
+                         .filter(b -> b.isId(id))
+                         .findFirst()
+                         .get();
     }
 
     public List<Book> getItemByName(String name) {
@@ -53,6 +49,7 @@ public class BookService implements LibraryService<Book>, Loanable, Reservable{
                          booksByAuthor.add(book);
                          System.out.println(book);
                       });
+
         return booksByAuthor;
     }
 
