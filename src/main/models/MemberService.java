@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MemberService implements LibraryService<Member>, Bannable{
-    private List<Member> members = new ArrayList<Member>();
-    private List<Member> bannedMembers = new ArrayList<Member>();
+    private final List<Member> members = new ArrayList<Member>();
+    private final List<Member> bannedMembers = new ArrayList<Member>();
 
     @Override
     public void addItem(Member item) {
@@ -48,5 +48,9 @@ public class MemberService implements LibraryService<Member>, Bannable{
         member.setStatus(MemberStatus.ACTIVE);
         bannedMembers.remove(member);
         members.add(member);
+    }
+
+    public List<Member> getBannedMembers() {
+        return new ArrayList<>(bannedMembers);
     }
 }

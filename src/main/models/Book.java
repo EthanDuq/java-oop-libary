@@ -2,6 +2,8 @@ package models;
 
 import enums.BookStatus;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Book {
@@ -12,7 +14,7 @@ public class Book {
 
     private BookStatus status;
     private Member borrowedBy;
-    private Member reservedBy;
+    private final List<Member> reservedMembers = new ArrayList<Member>();
 
     public Book(String title, String author) {
         this.title = title;
@@ -23,19 +25,26 @@ public class Book {
         // New book
         status = BookStatus.AVAILABLE;
         borrowedBy = null;
-        reservedBy = null;
     }
 
-    public Member getReservedBy() {
-        return reservedBy;
+    public void addReservedMember(Member member) {
+        reservedMembers.add(member);
     }
 
-    public void setReservedBy(Member reservedBy) {
-        this.reservedBy = reservedBy;
+    public void removeReservedMember(Member member) {
+        reservedMembers.remove(member);
+    }
+
+    public boolean isReservedMember() {
+        return reservedMembers.isEmpty();
     }
 
     public Member getBorrowedBy() {
         return borrowedBy;
+    }
+
+    public Member getReservedBy() {
+        return reservedMembers.get(0);
     }
 
     public void setBorrowedBy(Member borrowedBy) {
@@ -83,6 +92,10 @@ public class Book {
 
     public boolean isReserved() {
         return status == BookStatus.RESERVED;
+    }
+
+    public boolean isReservedBy(Member member) {
+        return reservedMembers.contains(member);
     }
 
     public boolean isBorrowed() {

@@ -8,16 +8,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Member {
     public static int idSuivante = 0;
-    private int id;
-    private String name;
+    private final int id;
+    private final String name;
 
     private MemberStatus status;
 
     private final int MAX_BOOKS_TO_BORROWED = 5;
     private final int MAX_BOOKS_TO_RESERVED = 5;
 
-    private List<Book> borrowedBooks = new ArrayList<>();
-    private List<Book> reservedBooks = new ArrayList<>();
+    private final List<Book> borrowedBooks = new ArrayList<>();
+    private final List<Book> reservedBooks = new ArrayList<>();
 
     public Member(String name) {
         this.name = name;
@@ -39,10 +39,9 @@ public class Member {
     }
 
     private boolean canBorrow(Book book) {
-        if (borrowedBooks.size() >= MAX_BOOKS_TO_BORROWED || borrowedBooks.contains(book)) {
-            return false;
-        }
-        return true;
+        return borrowedBooks.size() < MAX_BOOKS_TO_BORROWED
+                && !borrowedBooks.contains(book)
+                && status != MemberStatus.BANNED;
     }
 
     public boolean borrow(Book book) {
@@ -66,10 +65,9 @@ public class Member {
     }
 
     private boolean canReserve(Book book) {
-        if (MAX_BOOKS_TO_RESERVED <= reservedBooks.size() || reservedBooks.contains(book)) {
-            return false;
-        }
-        return true;
+        return MAX_BOOKS_TO_RESERVED > reservedBooks.size()
+                && !reservedBooks.contains(book)
+                && status != MemberStatus.BANNED;
     }
 
     public boolean reserveBook(Book book) {
@@ -99,5 +97,16 @@ public class Member {
 
     public void setStatus(MemberStatus status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", status=" + status +
+                ", borrowedBooks=" + borrowedBooks +
+                ", reservedBooks=" + reservedBooks +
+                '}';
     }
 }

@@ -5,11 +5,10 @@ import enums.BookStatus;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BookService implements LibraryService<Book>, Loanable, Reservable{
-    private List<Book> books = new ArrayList<Book>();
+    private final List<Book> books = new ArrayList<Book>();
 
     @Override
     public void addItem(Book item) {
@@ -76,7 +75,7 @@ public class BookService implements LibraryService<Book>, Loanable, Reservable{
             if (member != null && member.returnBook(book)){
                 System.out.println("Returned book : " + book.getTitle());
                 book.setBorrowedBy(null);
-                book.setStatus(BookStatus.AVAILABLE);
+                book.setStatus(!book.getReservedBy().borrow(book) ? BookStatus.AVAILABLE : BookStatus.RESERVED);
             }else{
                 System.out.println("Can't return book : " + book.getTitle());
             }
@@ -87,21 +86,20 @@ public class BookService implements LibraryService<Book>, Loanable, Reservable{
     public void reserveItem(Book book, Member member) {
         if (member != null && member.reserveBook(book)) {
             System.out.println("Reserved book : " + book.getTitle());
-            book.setStatus(BookStatus.RESERVED);
-            book.setReservedBy(member);
+            book.addReservedMember(member);
+            if (book.isAvailable()) book.setStatus(BookStatus.RESERVED);
         }else{
             System.out.println("Can't reserve book : " + book.getTitle());
         }
     }
 
     @Override
-    public void cancelReservation(Book book) {
-        if (book.isReserved()) {
-            Member member = book.getReservedBy();
+    public void cancelReservation(Book book, Member member) {
+        if (book.isReserved() && book.isReservedBy(member)) {
             if (member != null && member.cancelReserve(book)) {
                 System.out.println("Cancel reservation book : " + book.getTitle());
                 book.setStatus(BookStatus.AVAILABLE);
-                book.setReservedBy(null);
+                book.removeReservedMember(member);
             }else{
                 System.out.println("Can't cancel reservation book : " + book.getTitle());
             }
