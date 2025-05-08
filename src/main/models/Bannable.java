@@ -1,6 +1,6 @@
 package models;
 
 public interface Bannable {
-    void banMember();
-    void unBanMember();
+    void banMember(Member member);
+    void unBanMember(Member member);
 }

@@ -1,10 +1,13 @@
 package models;
 
+import enums.MemberStatus;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MemberService implements LibraryService<Member>, Bannable{
     private List<Member> members = new ArrayList<Member>();
+    private List<Member> bannedMembers = new ArrayList<Member>();
 
     @Override
     public void addItem(Member item) {
@@ -33,12 +36,17 @@ public class MemberService implements LibraryService<Member>, Bannable{
     }
 
     @Override
-    public void banMember() {
-
+    public void banMember(Member member) {
+        member.cleanBookLists();
+        member.setStatus(MemberStatus.BANNED);
+        members.remove(member);
+        bannedMembers.add(member);
     }
 
     @Override
-    public void unBanMember() {
-
+    public void unBanMember(Member member) {
+        member.setStatus(MemberStatus.ACTIVE);
+        bannedMembers.remove(member);
+        members.add(member);
     }
 }

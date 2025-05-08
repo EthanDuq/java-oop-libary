@@ -91,4 +91,13 @@ public class Member {
         }
         return false;
     }
+
+    public void cleanBookLists(){
+        borrowedBooks.clear();
+        reservedBooks.clear();
+    }
+
+    public void setStatus(MemberStatus status) {
+        this.status = status;
+    }
 }
